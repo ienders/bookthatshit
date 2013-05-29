@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   def index
-    redirect_to action: 'unauthenticated' unless session[:email]
+    authenticate
   end
 
   def logout
@@ -23,6 +23,15 @@ class ApplicationController < ActionController::Base
 
   def oauth_failure
     redirect_to action: 'index'
+  end
+
+  protected
+  def authenticate
+    return true if session[:email]
+    respond_to do |format|
+      format.html { redirect_to 'unauthenticated' }
+      format.json { head :unauthorized }
+    end
   end
 
 end

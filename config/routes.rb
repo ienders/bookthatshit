@@ -5,6 +5,10 @@ Bookthatshit::Application.routes.draw do
   match '/auth/:provider/callback' => 'application#oauth_callback'
   match '/auth/failure' => 'application#oauth_failure'
 
+  namespace :api do
+    resources :events
+  end
+
   root :to => 'application#index'
 
 end
