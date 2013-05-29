@@ -120,17 +120,17 @@ describe Api::EventsController do
           Event.stub_chain(:owned_by, :find).and_return(event)
         end
 
-        it "responds with a 200 on success" do
+        it "responds with a 200" do
           put :update, id: 1, event: {}
           expect(response.status).to eq(200)
         end
 
-        it "renders the show template on success" do
+        it "renders the show template" do
           put :update, id: 1, event: {}
           expect(response).to render_template('show')
         end
 
-        it "loads the updated event into @event on success" do
+        it "loads the updated event into @event" do
           put :update, id: 1, event: {}
           expect(assigns(:event)).to eq(event)
         end

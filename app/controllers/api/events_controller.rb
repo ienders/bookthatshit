@@ -38,7 +38,6 @@ class Api::EventsController < ApplicationController
     render json: 'Invalid Record', status: :not_found
   end
 
-
   protected
   def get_event
     Event.owned_by(session[:email]).find(params[:id])

@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
   def index
     authenticate
+    render text: '', layout: true
   end
 
   def logout
