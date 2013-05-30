@@ -8,4 +8,7 @@
   = csrf_meta_tags
 %body
   .container{id: "#{params[:controller]}-#{params[:action]}"}= yield
+  - if session[:email]
+    #session{data: { session: { name: session[:name], email: session[:email] }.to_json }}
+
   = javascript_include_tag 'application'

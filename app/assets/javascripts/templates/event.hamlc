@@ -1,0 +1,7 @@
+- if @event.isYours(window.session)
+  %a
+    %strong= @event.get('description')
+    (You)
+- else
+  %strong= @event.get('description')
+  (#{@event.get('booked_by_name')})

@@ -9,9 +9,9 @@ class window.CalendarView extends Backbone.View
     @$el.html JST['calendar']()
     @cal = @$('.fc-calendar-container').calendario
       onDayClick: @onDayClick
-      caldata: _(@collection.models).reduce (memo, event) ->
+      caldata: _(@collection.models).reduce (memo, event) =>
         memo[event.calendarFormat()] ||= []
-        memo[event.calendarFormat()].push event.get('description')
+        memo[event.calendarFormat()].push JST['event'](event: event)
         memo
       , {}
     @updateMonthYear()
@@ -40,4 +40,4 @@ class window.CalendarView extends Backbone.View
       description: description
       date: "#{date.year}-#{date.month}-#{date.day}"
     event.save {},
-      success: => @cal.addEvent(event.calendarFormat(), description)
+      success: => @cal.addEvent(event.calendarFormat(), JST['event'](event: event))
