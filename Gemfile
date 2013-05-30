@@ -13,6 +13,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'rails-backbone'
   gem 'haml_coffee_assets'
+  gem 'momentjs-rails'
 end
 
 group :development, :test do

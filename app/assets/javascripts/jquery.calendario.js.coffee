@@ -116,7 +116,11 @@ $.Calendario:: =
           
           strdate = ((if @month + 1 < 10 then "0" + (@month + 1) else @month + 1)) + "-" + ((if day < 10 then "0" + day else day)) + "-" + @year
           dayData = @caldata[strdate]
-          content = dayData  if dayData
+          if dayData
+            if dayData instanceof Array
+              content = dayData.join ' '
+            else
+              content = dayData
           inner += "<div>" + content + "</div>"  if content isnt ""
           ++day
         else
@@ -190,6 +194,11 @@ $.Calendario:: =
     $.extend @caldata, caldata
     @_generateTemplate()
   
+  addEvent: (date, value) ->
+    @caldata[date] ||= []
+    @caldata[date].push value
+    @_generateTemplate()
+
   gotoNow: (callback) ->
     @month = @today.getMonth()
     @year = @today.getFullYear()

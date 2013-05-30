@@ -6,15 +6,14 @@ class window.CalendarView extends Backbone.View
     'click .custom-current': 'currentMonth'
 
   render: ->
-    @$el.html(JST['calendar']())
+    @$el.html JST['calendar']()
     @cal = @$('.fc-calendar-container').calendario
-      onDayClick: ($el, $contentEl, dateProperties) ->
-        for key of dateProperties
-          console.log key + ' = ' + dateProperties[key]
-      caldata:
-        '06-01-2012': 'Party Time'
-    # @cal.setData({ '06-01-2012' : '...', ... })
-    # @cal.goto(3,2013, updateMonthYear)
+      onDayClick: @onDayClick
+      caldata: _(@collection.models).reduce (memo, event) ->
+        memo[event.calendarFormat()] ||= []
+        memo[event.calendarFormat()].push event.get('description')
+        memo
+      , {}
     @updateMonthYear()
     @
 
@@ -33,3 +32,17 @@ class window.CalendarView extends Backbone.View
   updateMonthYear: ->
     @$('.custom-month').html @cal.getMonthName()
     @$('.custom-year').html @cal.getYear()
+
+  onDayClick: ($el, $contentEl, date) =>
+    description = prompt('Enter a description for your booking:')
+    return unless description
+    event = new Event
+      description: description
+      starts_at: "#{date.year}-#{date.month}-#{date.day}"
+      ends_at: "#{date.year}-#{date.month}-#{date.day}"
+    event.save {},
+      success: => @cal.addEvent(event.calendarFormat(), description)
+
+  padded: (number) ->
+    pad = "00"
+    (pad + number).slice(-pad.length)

@@ -1,9 +1,8 @@
 class ApplicationController < ActionController::Base
 
-  protect_from_forgery
+  before_filter :authenticate, only: [ :index ]
 
   def index
-    authenticate
     render text: '', layout: true
   end
 
@@ -30,7 +29,7 @@ class ApplicationController < ActionController::Base
   def authenticate
     return true if session[:email]
     respond_to do |format|
-      format.html { redirect_to 'unauthenticated' }
+      format.html { redirect_to action: 'unauthenticated' }
       format.json { head :unauthorized }
     end
   end
