@@ -17,8 +17,7 @@ ActiveRecord::Schema.define(:version => 20130528005026) do
     t.string   "booked_by_email"
     t.string   "booked_by_name"
     t.string   "description"
-    t.date     "starts_at"
-    t.date     "ends_at"
+    t.date     "date"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
   end

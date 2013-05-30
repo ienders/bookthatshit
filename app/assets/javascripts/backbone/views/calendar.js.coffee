@@ -38,11 +38,6 @@ class window.CalendarView extends Backbone.View
     return unless description
     event = new Event
       description: description
-      starts_at: "#{date.year}-#{date.month}-#{date.day}"
-      ends_at: "#{date.year}-#{date.month}-#{date.day}"
+      date: "#{date.year}-#{date.month}-#{date.day}"
     event.save {},
       success: => @cal.addEvent(event.calendarFormat(), description)
-
-  padded: (number) ->
-    pad = "00"
-    (pad + number).slice(-pad.length)

@@ -4,8 +4,7 @@ class CreateEvents < ActiveRecord::Migration
       t.string :booked_by_email
       t.string :booked_by_name
       t.string :description
-      t.date :starts_at
-      t.date :ends_at
+      t.date :date
       t.timestamps
     end
   end

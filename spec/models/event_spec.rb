@@ -3,15 +3,13 @@ require 'spec_helper'
 describe Event do
   describe "a collection of events" do
     ian = Event.create!(
-      starts_at: '2013-01-01',
-      ends_at: '2013-01-03',
+      date: '2013-01-01',
       description: 'Party Time!',
       booked_by_email: 'ian@example.com',
       booked_by_name: 'Ian'
     )
     paco = Event.create!(
-      starts_at: '2013-03-01',
-      ends_at: '2013-03-03',
+      date: '2013-03-01',
       description: 'BBQ!',
       booked_by_email: 'paco@example.com',
       booked_by_name: 'Paco McTaco'
@@ -27,15 +25,14 @@ describe Event do
   end
 
   it "should merge in email and name from the session" do
-    event = Event.new_with_session({ starts_at: Date.today }, { email: 'ian@example.com', name: 'Ian' })
+    event = Event.new_with_session({ date: Date.today }, { email: 'ian@example.com', name: 'Ian' })
     expect(event.booked_by_email).to eq('ian@example.com')
     expect(event.booked_by_name).to eq('Ian')
   end
 
   it "should not be possible to update booked by email or name" do
     event = Event.new(
-      starts_at: Date.today,
-      ends_at: Date.today + 1.day,
+      date: Date.today,
       booked_by_email: 'ian@example.com',
       booked_by_name: 'Ian'
     )
