@@ -14,6 +14,7 @@ group :assets do
   gem 'rails-backbone'
   gem 'haml_coffee_assets'
   gem 'momentjs-rails'
+  gem 'font-awesome-rails'
 end
 
 group :development, :test do

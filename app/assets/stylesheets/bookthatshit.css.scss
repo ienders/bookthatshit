@@ -375,3 +375,13 @@ body {
     }
   }
 }
+
+.user-event, .remove-event {
+  strong {
+    margin-right: 5px;
+  }
+  i {
+    margin-left: 5px;
+    font-size: 15px;
+  }
+}

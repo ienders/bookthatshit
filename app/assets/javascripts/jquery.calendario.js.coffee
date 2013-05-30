@@ -46,7 +46,7 @@ $.Calendario:: =
 
   _initEvents: ->
     self = this
-    @$el.on "click.calendario", "div.fc-row > div", ->
+    @$el.on "click", "div.fc-row > div", ->
       $cell = $(this)
       idx = $cell.index()
       $content = $cell.children("div")

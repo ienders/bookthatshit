@@ -1,7 +1,9 @@
 - if @event.isYours(window.session)
-  %a
+  %a.remove-event{data: { id: @event.id }}
     %strong= @event.get('description')
     (You)
+    %i.icon-remove-sign
 - else
-  %strong= @event.get('description')
-  (#{@event.get('booked_by_name')})
+  %span.user-event
+    %strong= @event.get('description')
+    (#{@event.get('booked_by_name')})

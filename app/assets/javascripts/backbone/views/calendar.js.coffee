@@ -9,12 +9,13 @@ class window.CalendarView extends Backbone.View
     @$el.html JST['calendar']()
     @cal = @$('.fc-calendar-container').calendario
       onDayClick: @onDayClick
-      caldata: _(@collection.models).reduce (memo, event) =>
+      caldata: _(@collection.models).reduce (memo, event) ->
         memo[event.calendarFormat()] ||= []
         memo[event.calendarFormat()].push JST['event'](event: event)
         memo
       , {}
     @updateMonthYear()
+    @$('.fc-calendar-container').on('click', 'div.fc-row > div .remove-event', @removeEvent)
     @
 
   nextMonth: ->
@@ -41,3 +42,10 @@ class window.CalendarView extends Backbone.View
       date: "#{date.year}-#{date.month}-#{date.day}"
     event.save {},
       success: => @cal.addEvent(event.calendarFormat(), JST['event'](event: event))
+
+  removeEvent: (e) ->
+    return false unless confirm('Are you sure you want to remove this booking?')
+    link = $(e.currentTarget)
+    model = new Event(id: link.data('id'))
+    model.destroy success: -> link.remove()
+    false
