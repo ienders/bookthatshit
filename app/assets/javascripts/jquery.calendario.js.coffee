@@ -181,23 +181,10 @@ $.Calendario:: =
 
   getMonthName: ->
     (if @options.displayMonthAbbr then @options.monthabbrs[@month] else @options.months[@month])
-  
-  # gets the cell's content div associated to a day of the current displayed month
-  # day : 1 - [28||29||30||31]
-  getCell: (day) ->
-    row = Math.floor((day + @startingDay - @options.startIn) / 7)
-    pos = day + @startingDay - @options.startIn - (row * 7) - 1
-    @$cal.find("div.fc-body").children("div.fc-row").eq(row).children("div").eq(pos).children "div"
 
-  setData: (caldata) ->
-    caldata = caldata or {}
-    $.extend @caldata, caldata
-    @_generateTemplate()
-  
-  addEvent: (date, value) ->
-    @caldata[date] ||= []
-    @caldata[date].push value
-    @_generateTemplate()
+  resetEvents: (caldata) ->
+    @caldata = caldata or {}
+    @_generateTemplate()    
 
   gotoNow: (callback) ->
     @month = @today.getMonth()

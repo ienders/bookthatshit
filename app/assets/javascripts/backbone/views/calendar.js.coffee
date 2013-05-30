@@ -5,32 +5,28 @@ class window.CalendarView extends Backbone.View
     'click .custom-prev': 'prevMonth'
     'click .custom-current': 'currentMonth'
 
+  initialize: ->
+    @collection.on 'add', @redraw, @
+    @collection.on 'remove', @redraw, @
+
   render: ->
     @$el.html JST['calendar']()
-    @cal = @$('.fc-calendar-container').calendario
-      onDayClick: @onDayClick
-      caldata: _(@collection.models).reduce (memo, event) ->
-        memo[event.calendarFormat()] ||= []
-        memo[event.calendarFormat()].push JST['event'](event: event)
-        memo
-      , {}
+    @cal = @$('.fc-calendar-container').calendario onDayClick: @onDayClick
     @updateMonthYear()
     @$('.fc-calendar-container').on('click', 'div.fc-row > div .remove-event', @removeEvent)
+    @redraw()
     @
 
   nextMonth: ->
-    @cal.gotoNextMonth()
-    @updateMonthYear()
+    @cal.gotoNextMonth @updateMonthYear
 
   prevMonth: ->
-    @cal.gotoPreviousMonth()
-    @updateMonthYear()
+    @cal.gotoPreviousMonth @updateMonthYear
 
   currentMonth: ->
-    @cal.gotoNow()
-    @updateMonthYear()
+    @cal.gotoNow @updateMonthYear
 
-  updateMonthYear: ->
+  updateMonthYear: =>
     @$('.custom-month').html @cal.getMonthName()
     @$('.custom-year').html @cal.getYear()
 
@@ -40,14 +36,18 @@ class window.CalendarView extends Backbone.View
     event = new Event
       description: description
       date: "#{date.year}-#{date.month}-#{date.day}"
-    event.save {},
-      success: =>
-        @collection.add event
-        @cal.addEvent(event.calendarFormat(), JST['event'](event: event))
+    event.save {}, success: => @collection.add event
 
-  removeEvent: (e) ->
+  removeEvent: (e) =>
     return false unless confirm('Are you sure you want to remove this booking?')
     link = $(e.currentTarget)
-    model = new Event(id: link.data('id'))
-    model.destroy success: -> link.remove()
+    event = @collection.get link.data('id')
+    event.destroy success: => @collection.remove event
     false
+
+  redraw: ->
+    @cal.resetEvents _(@collection.models).reduce (memo, event) ->
+        memo[event.calendarFormat()] ||= []
+        memo[event.calendarFormat()].push JST['event'](event: event)
+        memo
+      , {}
