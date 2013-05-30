@@ -1,11 +1,12 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.13'
-gem 'sqlite3'
 gem 'haml'
 gem 'omniauth-google-oauth2'
 gem 'rabl'
 gem 'jquery-rails'
+gem 'pg'
+gem 'thin'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'
@@ -19,4 +20,5 @@ end
 
 group :development, :test do
   gem 'rspec-rails'
+  gem 'sqlite3'
 end

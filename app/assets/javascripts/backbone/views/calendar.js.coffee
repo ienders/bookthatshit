@@ -41,7 +41,9 @@ class window.CalendarView extends Backbone.View
       description: description
       date: "#{date.year}-#{date.month}-#{date.day}"
     event.save {},
-      success: => @cal.addEvent(event.calendarFormat(), JST['event'](event: event))
+      success: =>
+        @collection.add event
+        @cal.addEvent(event.calendarFormat(), JST['event'](event: event))
 
   removeEvent: (e) ->
     return false unless confirm('Are you sure you want to remove this booking?')
