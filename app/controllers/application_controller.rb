@@ -1,9 +1,8 @@
 class ApplicationController < ActionController::Base
 
-  before_filter :authenticate, only: [ :index ]
+  before_action :authenticate, only: [ :index ]
 
   def index
-    render text: '', layout: true
   end
 
   def logout

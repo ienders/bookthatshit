@@ -1,14 +1,14 @@
-Bookthatshit::Application.routes.draw do
+Rails.application.routes.draw do
 
-  match '/logout' => 'application#logout'
-  match '/unauthenticated' => 'application#unauthenticated'
-  match '/auth/:provider/callback' => 'application#oauth_callback'
-  match '/auth/failure' => 'application#oauth_failure'
+  get '/logout' => 'application#logout'
+  get '/unauthenticated' => 'application#unauthenticated'
+  get '/auth/:provider/callback' => 'application#oauth_callback'
+  get '/auth/failure' => 'application#oauth_failure'
 
   namespace :api do
     resources :events
   end
 
-  root :to => 'application#index'
+  root to: 'application#index'
 
 end

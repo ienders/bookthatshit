@@ -1,26 +1,29 @@
 source 'https://rubygems.org'
 
-ruby '2.0.0'
+ruby '2.5.1'
 
-gem 'rails', '3.2.13'
+gem 'rails'
+gem 'responders'
 gem 'haml'
 gem 'omniauth-google-oauth2'
 gem 'rabl'
 gem 'jquery-rails'
 gem 'pg'
 gem 'thin'
-
-group :assets do
-  gem 'sass-rails', '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-  gem 'uglifier', '>= 1.0.3'
-  gem 'rails-backbone'
-  gem 'haml_coffee_assets'
-  gem 'momentjs-rails'
-  gem 'font-awesome-rails'
-end
+gem 'sass'
+gem 'coffee-rails'
+gem 'uglifier'
+gem 'rails-backbone'
+gem 'haml_coffee_assets'
+gem 'momentjs-rails'
+gem 'font-awesome-rails'
 
 group :development, :test do
+  gem 'listen'
   gem 'rspec-rails'
+  gem 'rails-controller-testing'
+end
+
+group :test do
   gem 'sqlite3'
 end

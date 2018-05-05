@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Api::EventsController do
+describe Api::EventsController, type: :controller do
 
   before :each do
     request.accept = "application/json"
@@ -26,7 +26,7 @@ describe Api::EventsController do
       let(:events) { [ double('event') ] }
 
       before :each do
-        Event.stub(:ordered).and_return events  
+        allow(Event).to receive(:ordered).and_return events  
       end
 
       it "responds with a nice 200" do
@@ -47,8 +47,8 @@ describe Api::EventsController do
 
     describe "GET show" do
       it "tosses a 404 if a bad ID is presented" do
-        Event.stub(:find).and_raise(ActiveRecord::RecordNotFound)
-        get :show, id: 1
+        allow(Event).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+        get :show, params: { id: 1 }
         expect(response.status).to eq(404)
       end
 
@@ -56,21 +56,21 @@ describe Api::EventsController do
         let(:event) { double('event', id: 1) }
 
         before :each do
-          Event.stub(:find).and_return event
+          allow(Event).to receive(:find).and_return event
         end
 
         it "responds with a 200 if the ID is good" do
-          get :show, id: event.id
+          get :show, params: { id: event.id }
           expect(response.status).to eq(200)
         end
 
         it "renders the show template" do
-          get :show, id: event.id
+          get :show, params: { id: event.id }
           expect(response).to render_template('show')
         end
 
         it "loads the event into @event" do
-          get :show, id: event.id
+          get :show, params: { id: event.id }
           expect(assigns(:event)).to eq(event)
         end
       end
@@ -79,29 +79,29 @@ describe Api::EventsController do
     describe "POST create" do
       describe "with bad data" do
         it "responds with a 422" do
-          Event.any_instance.stub(:save).and_return(false)
-          post :create, event: {}
+          allow_any_instance_of(Event).to receive(:save).and_return(false)
+          post :create, params: { event: {} }
           expect(response.status).to eq(422)
         end
       end
 
       describe "with good data" do
         before :each do
-          Event.any_instance.stub(:save).and_return(true)
+          allow_any_instance_of(Event).to receive(:save).and_return(true)
         end
 
         it "responds with a 200" do
-          post :create, event: {}
+          post :create, params: { event: { description: 'hey' } }
           expect(response.status).to eq(200)
         end
 
         it "renders the show template" do
-          post :create, event: {}
+          post :create, params: { event: { description: 'yo' } }
           expect(response).to render_template('show')
         end
 
         it "loads the created event into @event" do
-          post :create, event: {}
+          post :create, params: { event: { description: 'cool' } }
           expect(assigns(:event)).to be_an_instance_of(Event)
         end
       end
@@ -109,29 +109,29 @@ describe Api::EventsController do
 
     describe "PUT update" do
       it "tosses a 404 if a bad ID is presented" do
-        Event.stub_chain(:owned_by, :find).and_raise(ActiveRecord::RecordNotFound)
-        put :update, id: 1, event: {}
+        allow(Event).to receive_message_chain(:owned_by, :find).and_raise(ActiveRecord::RecordNotFound)
+        put :update, params: { id: 1, event: {} }
       end
 
       describe "with good data" do
-        let(:event) { double('event', update_safe_attributes: true) }
+        let(:event) { double('event', update: true) }
 
         before :each do
-          Event.stub_chain(:owned_by, :find).and_return(event)
+          allow(Event).to receive_message_chain(:owned_by, :find).and_return(event)
         end
 
         it "responds with a 200" do
-          put :update, id: 1, event: {}
+          put :update, params: { id: 1, event: { description: 'yo' } }
           expect(response.status).to eq(200)
         end
 
         it "renders the show template" do
-          put :update, id: 1, event: {}
+          put :update, params: { id: 1, event: { description: 'hey' } }, format: :json
           expect(response).to render_template('show')
         end
 
         it "loads the updated event into @event" do
-          put :update, id: 1, event: {}
+          put :update, params: { id: 1, event: {} }
           expect(assigns(:event)).to eq(event)
         end
       end
@@ -139,24 +139,24 @@ describe Api::EventsController do
 
     describe "DELETE destroy" do
       it "will check for events owned by logged in user" do
-        Event.stub(:owned_by).with('ian@example.com') do
+        allow(Event).to receive(:owned_by).with('ian@example.com') do
           double('owned_events').tap do |proxy|
-            proxy.stub(:find).and_raise(ActiveRecord::RecordNotFound)
+            allow(proxy).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
           end
         end
 
-        delete :destroy, id: 1
+        delete :destroy, params: { id: 1 }
 
         expect(response.status).to eq(404)
       end
 
       it "renders an empty body on success" do
-        Event.stub_chain(:owned_by, :find).and_return(double('event', destroy: true ))
+        allow(Event).to receive_message_chain(:owned_by, :find).and_return(double('event', destroy: true ))
 
-        delete :destroy, id: 1
+        delete :destroy, params: { id: 1 }
 
         expect(response.status).to eq(204)
-        expect(response.body).to eq(' ')
+        expect(response.body).to eq('')
       end
     end
   end
