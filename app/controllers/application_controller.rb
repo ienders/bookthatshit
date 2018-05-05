@@ -15,14 +15,12 @@ class ApplicationController < ActionController::Base
 
   def oauth_callback
     auth = request.env['omniauth.auth']
-    Rails.logger.warn("Oauth callback: #{auth.inspect}")
     session[:name] = auth['info']['name']
     session[:email] = auth['info']['email']
     redirect_to action: 'index'
   end
 
   def oauth_failure
-    Rails.logger.warn("Fail to auth: #{request.env['omniauth.auth'].inspect}")
     redirect_to action: 'index'
   end
 
